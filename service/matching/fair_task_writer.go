@@ -19,7 +19,10 @@ import (
 )
 
 type (
-	// fairTaskWriter writes tasks with stride scheduling
+	// fairTaskWriter persists newly scheduled fair tasks.
+	// It batches appends from matching onto the task queue DB and assigns task IDs
+	// from leased blocks, using stride scheduling so fairness keys get proportional
+	// share of the backlog rather than strict FIFO order.
 	fairTaskWriter struct {
 		backlogMgr     *fairBacklogManagerImpl
 		config         *taskQueueConfig
