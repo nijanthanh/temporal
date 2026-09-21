@@ -8,6 +8,9 @@ import (
 )
 
 type (
+	// liveness is an idle watchdog. After Start, if markAlive is not called within
+	// ttl(), onIdle fires (typically to unload an idle task queue). Stop cancels the
+	// pending timer.
 	liveness struct {
 		timeSource clock.TimeSource
 		ttl        func() time.Duration
