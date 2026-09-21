@@ -21,6 +21,8 @@ type (
 	}
 )
 
+// pollerHistory is a TTL cache of recent pollers on a task queue, keyed by
+// poller identity. Matching uses it to answer DescribeTaskQueue poller lists.
 type pollerHistory struct {
 	// poller ID -> pollerInfo
 	// pollers map[pollerID]pollerInfo
