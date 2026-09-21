@@ -7,13 +7,18 @@ import (
 )
 
 const (
-	// minWeight * strideFactor must be >= 1
+	// strideFactor converts a fairness weight into an integer stride. Combined with
+	// minWeight, this keeps the smallest valid stride at 1 (minWeight * strideFactor >= 1).
 	strideFactor = 1000
 	minWeight    = 0.001
 )
 
+// fairnessWeightOverrides maps fairness keys to task-queue-level weight overrides.
 type fairnessWeightOverrides map[string]float32
 
+// getEffectiveWeight returns the fairness weight used for stride scheduling.
+// Task-queue overrides win over the priority's own weight. Zero and negative
+// weights mean the default of 1.0; positive weights are clamped to minWeight.
 func getEffectiveWeight(overrides fairnessWeightOverrides, pri *commonpb.Priority) float32 {
 	key := pri.GetFairnessKey()
 	weight, ok := overrides[key]
