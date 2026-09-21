@@ -24,6 +24,10 @@ import (
 )
 
 type (
+	// fairTaskReader loads fair-scheduled tasks from persistence into memory for matching.
+	// It tracks outstanding (unacked) tasks by fair level, advances an inclusive ack level
+	// as workers complete them, and GCs completed tasks from the DB. Concurrent writes are
+	// folded in via newlyWrittenTasks so the in-memory read level cannot skip a just-appended task.
 	fairTaskReader struct {
 		backlogMgr      *fairBacklogManagerImpl
 		subqueue        subqueueIndex
